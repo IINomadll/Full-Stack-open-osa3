@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-// json-parser käyttöön
+// take json-parser to use
 app.use(express.json());
 
 const PORT = 3001;
@@ -39,6 +39,7 @@ let persons = [
   },
 ];
 
+// GET REQUEST HANDLERS
 app.get("/", (request, response) => {
   response.send("<h2>Puhelinluettelo backend</h2>");
 });
@@ -66,6 +67,14 @@ app.get("/info", (request, response) => {
       <br></br>
       ${currentDateTime}
     </p>`);
+});
+
+// DELETE REQUEST HANDLER
+app.delete("/api/persons/:id", (request, response) => {
+  const id = request.params.id;
+  persons = persons.filter((p) => id !== p.id);
+
+  response.status(204).end();
 });
 
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
