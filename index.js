@@ -47,4 +47,16 @@ app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
 
+app.get("/info", (request, response) => {
+  const personCount = persons.length;
+  let currentDateTime = new Date();
+  currentDateTime.toLocaleDateString();
+
+  response.send(`<p>
+      Phonebook has info for ${personCount} people
+      <br></br>
+      ${currentDateTime}
+    </p>`);
+});
+
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
