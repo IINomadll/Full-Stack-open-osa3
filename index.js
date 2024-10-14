@@ -4,7 +4,16 @@ const app = express();
 
 // take json-parser MIDDLEWARE to use
 app.use(express.json());
-app.use(morgan("tiny"));
+
+// custom morgan token to log request body
+morgan.token("body", (req) => {
+  return req.method === "POST" ? JSON.stringify(req.body) : "";
+});
+
+// custom morgan format to log POST data
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 const PORT = 3001;
 
