@@ -6,6 +6,19 @@ app.use(express.json());
 
 const PORT = 3001;
 
+const generateId = () => {
+  let id = 0;
+
+  do {
+    // generate id
+    id = String(Math.floor(Math.random() * 1000));
+    console.log("ID IS NOW:", id);
+    // let's make sure that we have no duplicate IDs
+  } while (persons.find((p) => p.id === id));
+
+  return id;
+};
+
 let persons = [
   {
     id: "1",
@@ -67,6 +80,22 @@ app.get("/info", (request, response) => {
       <br></br>
       ${currentDateTime}
     </p>`);
+});
+
+// POST REQUEST HANDLER
+app.post("/api/persons", (request, response) => {
+  const body = request.body; // aquire data from body
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  console.log("PERSON:", person);
+  // console.log("REQUEST HEADERS", request.headers);
+
+  persons = persons.concat(person);
+  response.json(person);
 });
 
 // DELETE REQUEST HANDLER
