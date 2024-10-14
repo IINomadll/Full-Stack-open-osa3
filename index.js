@@ -1,8 +1,10 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 
-// take json-parser to use
+// take json-parser MIDDLEWARE to use
 app.use(express.json());
+app.use(morgan("tiny"));
 
 const PORT = 3001;
 
