@@ -4,6 +4,9 @@ const cors = require("cors");
 
 const app = express();
 
+// MIDDLEWARE to check dist first when handling GET request
+app.use(express.static("dist"));
+
 // take json-parser MIDDLEWARE to use
 app.use(express.json());
 
