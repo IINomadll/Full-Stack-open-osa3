@@ -20,8 +20,6 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-const PORT = 3001;
-
 const generateId = () => {
   let id = 0;
 
@@ -130,4 +128,6 @@ app.delete("/api/persons/:id", (request, response) => {
   response.status(204).end();
 });
 
+// use environment variable PORT or 3001
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));

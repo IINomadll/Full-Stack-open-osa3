@@ -1,3 +1,5 @@
 # Full-Stack-open-osa3
 
-Kurssin tehtävien 3. osan palautusrepositorio.
+Linkki [sovellukseen](https://full-stack-open-osa3.fly.dev/)
+
+My favorite search engine is [Duck Duck Go](https://duckduckgo.com).
