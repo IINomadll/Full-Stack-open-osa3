@@ -11,6 +11,7 @@
   "author": "Waltteri Lehtinen",
   "license": "ISC",
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.9",
     "nodemon": "^3.1.7"
   },
   "dependencies": {
