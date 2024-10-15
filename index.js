@@ -1,9 +1,14 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
+
 const app = express();
 
 // take json-parser MIDDLEWARE to use
 app.use(express.json());
+
+// cors MIDDLEWARE to allow cross origin requests
+app.use(cors());
 
 // custom morgan token to log request body
 morgan.token("body", (req) => {
