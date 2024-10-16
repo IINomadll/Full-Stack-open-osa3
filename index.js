@@ -59,11 +59,6 @@ let persons = [
   },
   {
     id: "5",
-    name: "Kate Upton",
-    number: "045-3458761",
-  },
-  {
-    id: "6",
     name: "Jennifer Lawrence",
     number: "044-5559876",
   },
