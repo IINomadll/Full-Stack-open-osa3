@@ -78,6 +78,21 @@ app.post("/api/persons", (request, response) => {
     .catch((error) => next(error));
 });
 
+// HTTP PUT (update)
+app.put("/api/persons/:id", (request, response, next) => {
+  const body = request.body;
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  };
+
+  // { new: true }, jotta saamme muuttuneen olion palautetuksi kutsujalle
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then((updatedPerson) => response.json(updatedPerson))
+    .catch((error) => next(error));
+});
+
 // HTTP DELETE endpoint
 app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
