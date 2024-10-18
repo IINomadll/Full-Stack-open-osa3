@@ -28,7 +28,7 @@ app.get("/", (request, response) => {
   response.send("<h2>Puhelinluettelo backend</h2>");
 });
 
-app.get("/api/persons", (request, response) => {
+app.get("/api/persons", (request, response, next) => {
   Person.find({})
     .then((people) => {
       response.json(people);
@@ -36,29 +36,34 @@ app.get("/api/persons", (request, response) => {
     .catch((error) => next(error));
 });
 
-app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  const person = persons.find((p) => id === p.id);
-  console.log("person: ", person);
-
-  if (person) response.json(person);
-  else response.status(404).end();
+app.get("/api/persons/:id", (request, response, next) => {
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) response.json(person);
+      else response.status(404).end();
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
-app.get("/info", (request, response) => {
-  const personCount = persons.length;
+app.get("/info", (request, response, next) => {
   let currentDateTime = new Date();
   currentDateTime.toLocaleDateString();
-
-  response.send(`<p>
-      Phonebook has info for ${personCount} people
-      <br></br>
-      ${currentDateTime}
-    </p>`);
+  Person.find({})
+    .then((people) => {
+      console.log("PEOPLE LENGTH", people.length);
+      response.send(`<p>
+          Phonebook has info for ${people.length} people
+          <br></br>
+          ${currentDateTime}
+        </p>`);
+    })
+    .catch((error) => next(error));
 });
 
 // HTTP POST endpoint
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body; // aquire data from body
 
   if (!body.name || !body.number)
