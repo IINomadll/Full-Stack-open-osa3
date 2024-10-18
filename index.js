@@ -29,9 +29,11 @@ app.get("/", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
-  Person.find({}).then((people) => {
-    response.json(people);
-  });
+  Person.find({})
+    .then((people) => {
+      response.json(people);
+    })
+    .catch((error) => next(error));
 });
 
 app.get("/api/persons/:id", (request, response) => {
@@ -68,19 +70,23 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    response.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      response.json(savedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 // HTTP DELETE endpoint
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
   Person.findByIdAndDelete(request.params.id)
     .then((result) => response.status(204).end())
     .catch((error) => next(error));
 });
 
 const errorHandler = (error, request, response, next) => {
+  console.log("inside errorHandler");
   console.log(error.message);
 
   if (error.name === "CastError")
