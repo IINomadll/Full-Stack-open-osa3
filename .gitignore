@@ -1,6 +1,6 @@
 node_modules
-#dist
 .dockerignore
 Dockerfile
 fly.toml
 .github/workflows/fly-deploy.yml
+.env

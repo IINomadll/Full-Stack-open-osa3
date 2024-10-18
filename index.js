@@ -1,8 +1,9 @@
+require("dotenv").config();
 const express = require("express");
+const app = express();
+const Person = require("./models/person");
 const morgan = require("morgan");
 const cors = require("cors");
-
-const app = express();
 
 // MIDDLEWARE to check dist first when handling GET request
 app.use(express.static("dist"));
@@ -70,7 +71,9 @@ app.get("/", (request, response) => {
 });
 
 app.get("/api/persons", (request, response) => {
-  response.json(persons);
+  Person.find({}).then((people) => {
+    response.json(people);
+  });
 });
 
 app.get("/api/persons/:id", (request, response) => {
