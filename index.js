@@ -24,46 +24,46 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-const generateId = () => {
-  let id = 0;
+// const generateId = () => {
+//   let id = 0;
 
-  do {
-    // generate id
-    id = String(Math.floor(Math.random() * 1000));
-    console.log("ID IS NOW:", id);
-    // let's make sure that we have no duplicate IDs
-  } while (persons.find((p) => p.id === id));
+//   do {
+//     // generate id
+//     id = String(Math.floor(Math.random() * 1000));
+//     console.log("ID IS NOW:", id);
+//     // let's make sure that we have no duplicate IDs
+//   } while (persons.find((p) => p.id === id));
 
-  return id;
-};
+//   return id;
+// };
 
-let persons = [
-  {
-    id: "1",
-    name: "Sydney Sweeney",
-    number: "050-2340983",
-  },
-  {
-    id: "2",
-    name: "Scarlett Johansson",
-    number: "040-1234567",
-  },
-  {
-    id: "3",
-    name: "Emilia Clarke",
-    number: "046-1234567",
-  },
-  {
-    id: "4",
-    name: "Ana De Armas",
-    number: "040-9847395",
-  },
-  {
-    id: "5",
-    name: "Jennifer Lawrence",
-    number: "044-5559876",
-  },
-];
+// let persons = [
+//   {
+//     id: "1",
+//     name: "Sydney Sweeney",
+//     number: "050-2340983",
+//   },
+//   {
+//     id: "2",
+//     name: "Scarlett Johansson",
+//     number: "040-1234567",
+//   },
+//   {
+//     id: "3",
+//     name: "Emilia Clarke",
+//     number: "046-1234567",
+//   },
+//   {
+//     id: "4",
+//     name: "Ana De Armas",
+//     number: "040-9847395",
+//   },
+//   {
+//     id: "5",
+//     name: "Jennifer Lawrence",
+//     number: "044-5559876",
+//   },
+// ];
 
 // GET REQUEST HANDLERS
 app.get("/", (request, response) => {
@@ -105,20 +105,14 @@ app.post("/api/persons", (request, response) => {
     // (400 bad request)
     return response.status(400).json({ error: "name or number missing" });
 
-  if (persons.find((p) => p.name.toLowerCase() === body.name.toLowerCase()))
-    return response.status(400).json({ error: "name must be unique" });
-
-  const person = {
-    id: generateId(),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  console.log("PERSON:", person);
-  // console.log("REQUEST HEADERS", request.headers);
-
-  persons = persons.concat(person);
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 // DELETE REQUEST HANDLER
