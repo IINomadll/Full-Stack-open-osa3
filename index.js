@@ -5,67 +5,25 @@ const Person = require("./models/person");
 const morgan = require("morgan");
 const cors = require("cors");
 
-// MIDDLEWARE to check dist first when handling GET request
+// MIDDLEWARE
+// **********
+// static-dist to prioritize dist when handling GET request
 app.use(express.static("dist"));
-
-// take json-parser MIDDLEWARE to use
+// json-parser to access request.body
 app.use(express.json());
-
-// cors MIDDLEWARE to allow cross origin requests
+// cors to allow cross origin requests
 app.use(cors());
 
 // custom morgan token to log request body
 morgan.token("body", (req) => {
   return req.method === "POST" ? JSON.stringify(req.body) : "";
 });
-
 // custom morgan format to log POST data
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 
-// const generateId = () => {
-//   let id = 0;
-
-//   do {
-//     // generate id
-//     id = String(Math.floor(Math.random() * 1000));
-//     console.log("ID IS NOW:", id);
-//     // let's make sure that we have no duplicate IDs
-//   } while (persons.find((p) => p.id === id));
-
-//   return id;
-// };
-
-// let persons = [
-//   {
-//     id: "1",
-//     name: "Sydney Sweeney",
-//     number: "050-2340983",
-//   },
-//   {
-//     id: "2",
-//     name: "Scarlett Johansson",
-//     number: "040-1234567",
-//   },
-//   {
-//     id: "3",
-//     name: "Emilia Clarke",
-//     number: "046-1234567",
-//   },
-//   {
-//     id: "4",
-//     name: "Ana De Armas",
-//     number: "040-9847395",
-//   },
-//   {
-//     id: "5",
-//     name: "Jennifer Lawrence",
-//     number: "044-5559876",
-//   },
-// ];
-
-// GET REQUEST HANDLERS
+// HTTP GET endpoints
 app.get("/", (request, response) => {
   response.send("<h2>Puhelinluettelo backend</h2>");
 });
@@ -97,7 +55,7 @@ app.get("/info", (request, response) => {
     </p>`);
 });
 
-// POST REQUEST HANDLER
+// HTTP POST endpoint
 app.post("/api/persons", (request, response) => {
   const body = request.body; // aquire data from body
 
@@ -115,13 +73,24 @@ app.post("/api/persons", (request, response) => {
   });
 });
 
-// DELETE REQUEST HANDLER
+// HTTP DELETE endpoint
 app.delete("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  persons = persons.filter((p) => id !== p.id);
-
-  response.status(204).end();
+  Person.findByIdAndDelete(request.params.id)
+    .then((result) => response.status(204).end())
+    .catch((error) => next(error));
 });
+
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message);
+
+  if (error.name === "CastError")
+    return response.status(400).send({ error: "malformatted id" });
+
+  next(error);
+};
+
+// tämä tulee kaikkien muiden middlewarejen ja routejen rekisteröinnin jälkeen!
+app.use(errorHandler);
 
 // use environment variable PORT or 3001
 const PORT = process.env.PORT || 3001;
