@@ -64,15 +64,11 @@ app.get("/info", (request, response, next) => {
 
 // HTTP POST endpoint
 app.post("/api/persons", (request, response, next) => {
-  const body = request.body; // aquire data from body
-
-  if (!body.name || !body.number)
-    // (400 bad request)
-    return response.status(400).json({ error: "name or number missing" });
+  const { name, number } = request.body; // aquire data from body
 
   const person = new Person({
-    name: body.name,
-    number: body.number,
+    name: name,
+    number: number,
   });
 
   person
@@ -111,6 +107,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError")
     return response.status(400).send({ error: "malformatted id" });
+  else if (error.name === "ValidationError")
+    return response.status(400).json({ error: error.message });
 
   next(error);
 };
